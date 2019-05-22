@@ -6,6 +6,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import com.sun_asterisk.music_65.R;
+import com.sun_asterisk.music_65.screen.favorite.FavoriteFragment;
+import com.sun_asterisk.music_65.screen.library.LibraryFragment;
+import com.sun_asterisk.music_65.screen.setting.SettingFragment;
 
 import static com.sun_asterisk.music_65.utils.FragmentHelper.replaceFragment;
 
