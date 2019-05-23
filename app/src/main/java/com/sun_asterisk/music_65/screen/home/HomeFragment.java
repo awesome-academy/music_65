@@ -1,4 +1,4 @@
-package com.sun_asterisk.music_65.screen.main;
+package com.sun_asterisk.music_65.screen.home;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

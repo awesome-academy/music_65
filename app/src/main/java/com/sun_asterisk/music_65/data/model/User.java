@@ -43,6 +43,14 @@ public class User implements Parcelable {
         dest.writeString(mUsername);
     }
 
+    public String getId() {
+        return mId;
+    }
+
+    public String getUsername() {
+        return mUsername;
+    }
+
     public void setId(String id) {
         mId = id;
     }
