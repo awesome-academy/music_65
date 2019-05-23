@@ -10,5 +10,5 @@ public final class Constant {
     public static final String BASE_ORDER = "&order=created_at";
     public static final String DEFAULT_LIMIT = "&limit=20&offset=2";
     public static final String BASE_TAGS = "&tags=songs";
-    public static final String LIMIT_BANNER = "&limit=5&offset=1";
+    public static final String LIMIT_BANNER = "&limit=5&offset=8";
 }

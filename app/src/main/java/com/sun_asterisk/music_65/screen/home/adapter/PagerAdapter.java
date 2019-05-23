@@ -1,4 +1,4 @@
-package com.sun_asterisk.music_65.screen.main.adapter;
+package com.sun_asterisk.music_65.screen.home.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
