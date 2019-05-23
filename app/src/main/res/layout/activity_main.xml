@@ -4,18 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/layoutContrainer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/sub_title_slogan"
+        />
     <FrameLayout
         android:id="@+id/layoutContrainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/navigationMenuHome"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarHome"
         />
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigationMenuHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_while"
+        android:background="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu_home"
         />
