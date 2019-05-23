@@ -25,6 +25,30 @@ public class Song implements Parcelable {
     public Song() {
     }
 
+    public String getId() {
+        return mId;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public String getDuration() {
+        return mDuration;
+    }
+
+    public String getGenre() {
+        return mGenre;
+    }
+
+    public String getArtworkUrl() {
+        return mArtworkUrl;
+    }
+
+    public User getUser() {
+        return mUser;
+    }
+
     protected Song(Parcel in) {
         mId = in.readString();
         mTitle = in.readString();
@@ -125,5 +149,6 @@ public class Song implements Parcelable {
         public static final String DURATION = "duration";
         public static final String GENRE = "genre";
         public static final String ARTWORKURL = "artwork_url";
+        public static final String USER = "user";
     }
 }
