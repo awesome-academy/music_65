@@ -28,4 +28,8 @@ public class SongRepository {
     public void getSongBanner(OnFetchDataJsonListener<Song> listener) {
         mRemoteDataSource.getSongBanner(listener);
     }
+
+    public void getSongByGenre(String genre, OnFetchDataJsonListener<Song> listener) {
+        mRemoteDataSource.getSongByGenre(genre, listener);
+    }
 }

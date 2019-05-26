@@ -6,12 +6,16 @@ import java.util.List;
 
 public interface ALLSongContract {
     interface View {
-        void onGetDataSuccess(List<Song> songList);
+        void onGetBannerSuccess(List<Song> bannerSongs);
 
         void onError(Exception e);
+
+        void onGetAllSongSuccess(List<Song> songs);
     }
 
     interface Presenter extends BasePresenter<View> {
         void getSongBanner();
+
+        void getSongByGenre(String genre);
     }
 }
