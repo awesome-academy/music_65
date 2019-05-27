@@ -11,12 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.sun_asterisk.music_65.R;
 import com.sun_asterisk.music_65.screen.allsong.AllSongFragment;
-import com.sun_asterisk.music_65.screen.ambient.AmbientFragment;
-import com.sun_asterisk.music_65.screen.audio.AudioFragment;
-import com.sun_asterisk.music_65.screen.classical.ClassicalFragment;
-import com.sun_asterisk.music_65.screen.country.CountryFragment;
-import com.sun_asterisk.music_65.screen.main.adapter.PagerAdapter;
-import com.sun_asterisk.music_65.screen.rock.RockFragment;
+import com.sun_asterisk.music_65.screen.home.adapter.PagerAdapter;
+import com.sun_asterisk.music_65.utils.CommonUtils;
 
 public class HomeFragment extends Fragment {
     private TabLayout mTabLayout;
@@ -36,11 +32,16 @@ public class HomeFragment extends Fragment {
         mViewPager = view.findViewById(R.id.viewPagerHome);
         PagerAdapter pagerAdapter = new PagerAdapter(getFragmentManager());
         pagerAdapter.addFragment(new AllSongFragment(), getString(R.string.titleAllSongs));
-        pagerAdapter.addFragment(new AudioFragment(), getString(R.string.titleAudio));
-        pagerAdapter.addFragment(new AmbientFragment(), getString(R.string.titleAmbient));
-        pagerAdapter.addFragment(new RockFragment(), getString(R.string.titleRock));
-        pagerAdapter.addFragment(new ClassicalFragment(), getString(R.string.titleClassical));
-        pagerAdapter.addFragment(new CountryFragment(), getString(R.string.titleCountry));
+        pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.AUDIO),
+                getString(R.string.titleAudio));
+        pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.AMBIENT),
+                getString(R.string.titleAmbient));
+        pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.ALTERNATIVE_ROCK),
+                getString(R.string.titleRock));
+        pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.CLASSICAL),
+                getString(R.string.titleClassical));
+        pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.COUNTRY),
+                getString(R.string.titleCountry));
         mViewPager.setAdapter(pagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }

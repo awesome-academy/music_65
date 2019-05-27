@@ -1,5 +1,8 @@
 package com.sun_asterisk.music_65.data.source;
 
+import com.sun_asterisk.music_65.data.model.Song;
+import com.sun_asterisk.music_65.data.source.remote.OnFetchDataJsonListener;
+
 public class SongRepository {
     private static SongRepository sInstance;
     private SongDataSource.LocalDataSource mLocalDataSource;
@@ -20,5 +23,9 @@ public class SongRepository {
             sInstance = new SongRepository(localDataSource, remoteDataSource);
         }
         return sInstance;
+    }
+
+    public void getSongBanner(OnFetchDataJsonListener<Song> listener) {
+        mRemoteDataSource.getSongBanner(listener);
     }
 }
