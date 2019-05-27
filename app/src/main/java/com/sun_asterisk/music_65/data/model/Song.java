@@ -12,6 +12,7 @@ public class Song implements Parcelable {
     private String mDuration;
     private String mGenre;
     private String mArtworkUrl;
+    private String mStreamUrl;
     private User mUser;
 
     public Song(SongBuilder songBuilder) {
@@ -20,6 +21,8 @@ public class Song implements Parcelable {
         mDuration = songBuilder.mDuration;
         mGenre = songBuilder.mGenre;
         mArtworkUrl = songBuilder.mArtworkUrl;
+        mUser = songBuilder.mUser;
+        mStreamUrl = songBuilder.mStreamUrl;
     }
 
     public Song() {
@@ -49,12 +52,17 @@ public class Song implements Parcelable {
         return mUser;
     }
 
+    public String getStreamUrl() {
+        return mStreamUrl;
+    }
+
     protected Song(Parcel in) {
         mId = in.readString();
         mTitle = in.readString();
         mDuration = in.readString();
         mGenre = in.readString();
         mArtworkUrl = in.readString();
+        mStreamUrl = in.readString();
         mUser = (User) Objects.requireNonNull(in.readParcelable(getClass().getClassLoader()));
     }
 
@@ -83,6 +91,7 @@ public class Song implements Parcelable {
         dest.writeString(mGenre);
         dest.writeString(mArtworkUrl);
         dest.writeParcelable(mUser, flags);
+        dest.writeString(mStreamUrl);
     }
 
     public static class SongBuilder {
@@ -91,15 +100,17 @@ public class Song implements Parcelable {
         private String mDuration;
         private String mGenre;
         private String mArtworkUrl;
+        private String mStreamUrl;
         private User mUser;
 
         public SongBuilder(String id, String title, String duration, String genre,
-                String artworkUrl, User user) {
+                String artworkUrl, String streamUrl, User user) {
             mId = id;
             mTitle = title;
             mDuration = duration;
             mGenre = genre;
             mArtworkUrl = artworkUrl;
+            mStreamUrl = streamUrl;
             mUser = user;
         }
 
@@ -131,9 +142,14 @@ public class Song implements Parcelable {
             return this;
         }
 
+        public SongBuilder streamUrl(String streamUrl) {
+            mStreamUrl = streamUrl;
+            return this;
+        }
+
         public SongBuilder user(JSONObject json) throws JSONException {
             mUser = new User.UserBuilder().id(json.getString(User.UserEntry.ID))
-                    .username(User.UserEntry.USERNAME)
+                    .username(json.getString(User.UserEntry.USERNAME))
                     .build();
             return this;
         }
@@ -149,6 +165,7 @@ public class Song implements Parcelable {
         public static final String DURATION = "duration";
         public static final String GENRE = "genre";
         public static final String ARTWORKURL = "artwork_url";
+        public static final String STREAMURL = "stream_url";
         public static final String USER = "user";
     }
 }

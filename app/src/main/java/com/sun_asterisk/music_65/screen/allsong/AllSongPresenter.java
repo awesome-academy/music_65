@@ -17,8 +17,23 @@ public class AllSongPresenter implements ALLSongContract.Presenter {
     public void getSongBanner() {
         mSongRepository.getSongBanner(new OnFetchDataJsonListener<Song>() {
             @Override
-            public void onSuccess(List<Song> data) {
-                mView.onGetDataSuccess(data);
+            public void onSuccess(List<Song> songs) {
+                mView.onGetBannerSuccess(songs);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                mView.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public void getSongByGenre(String genre) {
+        mSongRepository.getSongByGenre(genre, new OnFetchDataJsonListener<Song>() {
+            @Override
+            public void onSuccess(List<Song> songs) {
+                mView.onGetAllSongSuccess(songs);
             }
 
             @Override

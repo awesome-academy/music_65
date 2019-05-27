@@ -22,4 +22,10 @@ public class SongRemoteDataSource implements SongDataSource.RemoteDataSource {
         GetDataJson getDataJson = new GetDataJson(listener);
         getDataJson.getDataBanner();
     }
+
+    @Override
+    public void getSongByGenre(String genre, OnFetchDataJsonListener<Song> listener) {
+        GetDataJson getDataJson = new GetDataJson(listener);
+        getDataJson.getDataSongByGenre(genre);
+    }
 }

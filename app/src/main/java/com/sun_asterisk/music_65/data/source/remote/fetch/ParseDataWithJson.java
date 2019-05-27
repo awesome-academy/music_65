@@ -57,6 +57,7 @@ public class ParseDataWithJson {
                     .genre(jsonObject.getString(Song.SongEntry.GENRE))
                     .user(jsonObject.getJSONObject(Song.SongEntry.USER))
                     .artworkUrl(jsonObject.getString(Song.SongEntry.ARTWORKURL))
+                    .streamUrl(jsonObject.getString(Song.SongEntry.STREAMURL))
                     .build();
         } catch (Exception e) {
             e.printStackTrace();

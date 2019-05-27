@@ -12,5 +12,7 @@ public interface SongDataSource {
     //Remote
     interface RemoteDataSource {
         void getSongBanner(OnFetchDataJsonListener<Song> listener);
+
+        void getSongByGenre(String genre, OnFetchDataJsonListener<Song> listener);
     }
 }
