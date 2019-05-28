@@ -12,4 +12,6 @@
     <string name="titleClassical">Classical</string>
     <string name="titleCountry">Country</string>
     <string name="titleAllSongs">ALL Songs</string>
+    <string name="textLibrary">Library</string>
+    <string name="hintSearch">Search for songs</string>
 </resources>

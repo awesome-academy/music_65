@@ -55,7 +55,8 @@ public class GenreFragment extends Fragment
 
     private void initData() {
         SongRemoteDataSource remoteDataSource = SongRemoteDataSource.getInstance();
-        SongLocalDataSource localDataSource = SongLocalDataSource.getInstance();
+        SongLocalDataSource localDataSource =
+                SongLocalDataSource.getInstance(getActivity().getApplicationContext());
         SongRepository repository = SongRepository.getInstance(localDataSource, remoteDataSource);
         mPresenter = new GenrePresenter(repository);
         mPresenter.setView(this);
