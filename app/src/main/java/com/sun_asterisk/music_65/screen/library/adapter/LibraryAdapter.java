@@ -1,4 +1,4 @@
-package com.sun_asterisk.music_65.screen.home.adapter;
+package com.sun_asterisk.music_65.screen.library.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,20 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.sun_asterisk.music_65.R;
 import com.sun_asterisk.music_65.data.model.Song;
-import com.sun_asterisk.music_65.utils.CommonUtils;
 import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> {
+public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHolder> {
     private List<Song> mSongs;
     private OnItemRecyclerViewClickListener<Song> mItemClickListener;
 
-    public GenreAdapter() {
+    public LibraryAdapter() {
         mSongs = new ArrayList<>();
     }
 
@@ -28,7 +25,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_recyclerview_songbygenre, viewGroup, false);
+                .inflate(R.layout.item_recyclerview_library, viewGroup, false);
         return new ViewHolder(view, mSongs, mItemClickListener);
     }
 
@@ -39,12 +36,12 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mSongs != null ? mSongs.size() : 0;
+        return mSongs.size();
     }
 
-    public void updateData(List<Song> songList) {
+    public void updateData(List<Song> songs) {
         mSongs.clear();
-        mSongs.addAll(songList);
+        mSongs.addAll(songs);
         notifyDataSetChanged();
     }
 
@@ -54,19 +51,19 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ImageView mImageSongByGenre;
-        private TextView mTextTitleSongByGenre, mTextAuthorSongByGenre;
+        private ImageView mImageLocalSong;
+        private TextView mTextTitleLocalSong, mTextAuthorLocalSong;
         private OnItemRecyclerViewClickListener<Song> mListener;
         private List<Song> mSongs;
 
         public ViewHolder(@NonNull View itemView, List<Song> songs,
                 OnItemRecyclerViewClickListener<Song> listener) {
             super(itemView);
-            mListener = listener;
             mSongs = songs;
-            mImageSongByGenre = itemView.findViewById(R.id.imageSongByGenre);
-            mTextTitleSongByGenre = itemView.findViewById(R.id.textTitleSongByGenre);
-            mTextAuthorSongByGenre = itemView.findViewById(R.id.textAuthorSongByGenre);
+            mListener = listener;
+            mImageLocalSong = itemView.findViewById(R.id.imageLocalSong);
+            mTextTitleLocalSong = itemView.findViewById(R.id.textTitleLocalSong);
+            mTextAuthorLocalSong = itemView.findViewById(R.id.textAuthorLocalSong);
             itemView.setOnClickListener(this);
         }
 
@@ -78,12 +75,9 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
         }
 
         public void bindViewData(Song song) {
-            mTextTitleSongByGenre.setText(song.getTitle());
-            mTextAuthorSongByGenre.setText(song.getUser().getUsername());
-            Glide.with(itemView.getContext())
-                    .load(CommonUtils.setSize(song.getArtworkUrl(), CommonUtils.T300))
-                    .apply(new RequestOptions().error(R.drawable.play_local))
-                    .into(mImageSongByGenre);
+            mTextTitleLocalSong.setText(song.getTitle());
+            mTextAuthorLocalSong.setText(song.getUser().getUsername());
+            mImageLocalSong.setImageResource(R.drawable.play_local);
         }
     }
 }
