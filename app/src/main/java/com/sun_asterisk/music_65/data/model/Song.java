@@ -2,7 +2,6 @@ package com.sun_asterisk.music_65.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.Objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +26,44 @@ public class Song implements Parcelable {
 
     public Song() {
     }
+
+    protected Song(Parcel in) {
+        mId = in.readString();
+        mTitle = in.readString();
+        mDuration = in.readString();
+        mGenre = in.readString();
+        mArtworkUrl = in.readString();
+        mStreamUrl = in.readString();
+        mUser = in.readParcelable(User.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mTitle);
+        dest.writeString(mDuration);
+        dest.writeString(mGenre);
+        dest.writeString(mArtworkUrl);
+        dest.writeString(mStreamUrl);
+        dest.writeParcelable(mUser, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Song> CREATOR = new Creator<Song>() {
+        @Override
+        public Song createFromParcel(Parcel in) {
+            return new Song(in);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
 
     public String getId() {
         return mId;
@@ -54,60 +91,6 @@ public class Song implements Parcelable {
 
     public String getStreamUrl() {
         return mStreamUrl;
-    }
-
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
-    public void setDuration(String duration) {
-        mDuration = duration;
-    }
-
-    public void setStreamUrl(String streamUrl) {
-        mStreamUrl = streamUrl;
-    }
-
-    public void setUser(User user) {
-        mUser = user;
-    }
-
-    protected Song(Parcel in) {
-        mId = in.readString();
-        mTitle = in.readString();
-        mDuration = in.readString();
-        mGenre = in.readString();
-        mArtworkUrl = in.readString();
-        mStreamUrl = in.readString();
-        mUser = (User) Objects.requireNonNull(in.readParcelable(getClass().getClassLoader()));
-    }
-
-    public static final Creator<Song> CREATOR = new Creator<Song>() {
-        @Override
-        public Song createFromParcel(Parcel in) {
-            return new Song(in);
-        }
-
-        @Override
-        public Song[] newArray(int size) {
-            return new Song[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
-        dest.writeString(mTitle);
-        dest.writeString(mDuration);
-        dest.writeString(mGenre);
-        dest.writeString(mArtworkUrl);
-        dest.writeParcelable(mUser, flags);
-        dest.writeString(mStreamUrl);
     }
 
     public static class SongBuilder {

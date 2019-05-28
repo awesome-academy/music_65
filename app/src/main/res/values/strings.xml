@@ -14,4 +14,5 @@
     <string name="titleAllSongs">ALL Songs</string>
     <string name="textLibrary">Library</string>
     <string name="hintSearch">Search for songs</string>
+    <string name="titlePlaylist">Playlist</string>
 </resources>

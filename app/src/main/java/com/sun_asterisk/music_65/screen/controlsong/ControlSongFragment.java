@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.sun_asterisk.music_65.R;
 
 public class ControlSongFragment extends Fragment {
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
