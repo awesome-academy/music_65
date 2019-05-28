@@ -32,4 +32,8 @@ public class SongRepository {
     public void getSongByGenre(String genre, OnFetchDataJsonListener<Song> listener) {
         mRemoteDataSource.getSongByGenre(genre, listener);
     }
+
+    public void getLocalSongs(OnFetchDataJsonListener<Song> listener) {
+        mLocalDataSource.getLocalSongs(listener);
+    }
 }

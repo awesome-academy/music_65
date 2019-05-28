@@ -6,7 +6,7 @@ import com.sun_asterisk.music_65.data.source.remote.OnFetchDataJsonListener;
 public interface SongDataSource {
     //Local
     interface LocalDataSource {
-
+        void getLocalSongs(OnFetchDataJsonListener<Song> listener);
     }
 
     //Remote

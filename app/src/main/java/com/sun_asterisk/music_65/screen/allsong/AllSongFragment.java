@@ -92,7 +92,7 @@ public class AllSongFragment extends Fragment
 
     private void initData() {
         SongRemoteDataSource remoteDataSource = SongRemoteDataSource.getInstance();
-        SongLocalDataSource localDataSource = SongLocalDataSource.getInstance();
+        SongLocalDataSource localDataSource = SongLocalDataSource.getInstance(getActivity().getApplicationContext());
         SongRepository repository = SongRepository.getInstance(localDataSource, remoteDataSource);
         mPresenter = new AllSongPresenter(repository);
         mPresenter.setView(this);

@@ -56,6 +56,22 @@ public class Song implements Parcelable {
         return mStreamUrl;
     }
 
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
+    public void setDuration(String duration) {
+        mDuration = duration;
+    }
+
+    public void setStreamUrl(String streamUrl) {
+        mStreamUrl = streamUrl;
+    }
+
+    public void setUser(User user) {
+        mUser = user;
+    }
+
     protected Song(Parcel in) {
         mId = in.readString();
         mTitle = in.readString();
@@ -151,6 +167,11 @@ public class Song implements Parcelable {
             mUser = new User.UserBuilder().id(json.getString(User.UserEntry.ID))
                     .username(json.getString(User.UserEntry.USERNAME))
                     .build();
+            return this;
+        }
+
+        public SongBuilder user(User user) {
+            mUser = user;
             return this;
         }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sun_asterisk.music_65.R;
 import com.sun_asterisk.music_65.data.model.Song;
 import com.sun_asterisk.music_65.utils.CommonUtils;
@@ -81,6 +82,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
             mTextAuthorSongByGenre.setText(song.getUser().getUsername());
             Glide.with(itemView.getContext())
                     .load(CommonUtils.setSize(song.getArtworkUrl(), CommonUtils.T300))
+                    .apply(new RequestOptions().error(R.drawable.ic_playlist))
                     .into(mImageSongByGenre);
         }
     }
