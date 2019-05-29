@@ -19,6 +19,7 @@ import com.sun_asterisk.music_65.data.source.local.SongLocalDataSource;
 import com.sun_asterisk.music_65.data.source.remote.SongRemoteDataSource;
 import com.sun_asterisk.music_65.screen.allsong.adapter.AllSongAdapter;
 import com.sun_asterisk.music_65.screen.allsong.adapter.BannerPagerAdapter;
+import com.sun_asterisk.music_65.screen.playsong.PlaySongActivity;
 import com.sun_asterisk.music_65.utils.CommonUtils;
 import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
 import java.util.List;
@@ -33,6 +34,7 @@ public class AllSongFragment extends Fragment
     private RecyclerView mRecyclerViewAllSong;
     private AllSongAdapter mAllSongAdapter;
     private BannerPagerAdapter mBannerPagerAdapter;
+    private List<Song> mSongs;
 
     @Nullable
     @Override
@@ -61,6 +63,7 @@ public class AllSongFragment extends Fragment
     @Override
     public void onGetAllSongSuccess(List<Song> songs) {
         if (songs != null) {
+            mSongs = songs;
             mAllSongAdapter.updateData(songs);
         }
     }
@@ -73,7 +76,7 @@ public class AllSongFragment extends Fragment
 
     @Override
     public void onItemClickListener(Song item) {
-        Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        startActivity(PlaySongActivity.getIntent(getContext(), item));
     }
 
     private void initView(View view) {
