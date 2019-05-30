@@ -1,6 +1,7 @@
 package com.sun_asterisk.music_65.data.source.remote.fetch;
 
 import com.sun_asterisk.music_65.data.model.Song;
+import com.sun_asterisk.music_65.utils.Constant;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -52,13 +53,13 @@ public class ParseDataWithJson {
         Song song = new Song();
         try {
             song = new Song.SongBuilder().id(jsonObject.getString(Song.SongEntry.ID))
-                    .title(jsonObject.getString(Song.SongEntry.TITLE))
-                    .duration(jsonObject.getString(Song.SongEntry.DURATION))
-                    .genre(jsonObject.getString(Song.SongEntry.GENRE))
-                    .user(jsonObject.getJSONObject(Song.SongEntry.USER))
-                    .artworkUrl(jsonObject.getString(Song.SongEntry.ARTWORKURL))
-                    .streamUrl(jsonObject.getString(Song.SongEntry.STREAMURL))
-                    .build();
+                .title(jsonObject.getString(Song.SongEntry.TITLE))
+                .duration(jsonObject.getString(Song.SongEntry.DURATION))
+                .genre(jsonObject.getString(Song.SongEntry.GENRE))
+                .user(jsonObject.getJSONObject(Song.SongEntry.USER))
+                .artworkUrl(jsonObject.getString(Song.SongEntry.ARTWORKURL))
+                .streamUrl(jsonObject.getString(Song.SongEntry.STREAMURL) + Constant.STREAM)
+                .build();
         } catch (Exception e) {
             e.printStackTrace();
         }

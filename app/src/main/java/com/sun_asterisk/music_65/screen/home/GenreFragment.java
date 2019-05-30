@@ -1,5 +1,6 @@
 package com.sun_asterisk.music_65.screen.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,16 +16,19 @@ import com.sun_asterisk.music_65.data.source.SongRepository;
 import com.sun_asterisk.music_65.data.source.local.SongLocalDataSource;
 import com.sun_asterisk.music_65.data.source.remote.SongRemoteDataSource;
 import com.sun_asterisk.music_65.screen.home.adapter.GenreAdapter;
+import com.sun_asterisk.music_65.screen.playsong.PlaySongActivity;
+import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
 import java.util.List;
 
 public class GenreFragment extends Fragment
-        implements GenreContract.View, OnItemRecyclerViewClickListener<Song> {
+    implements GenreContract.View, OnItemRecyclerViewClickListener<Song> {
     private static final String GENRES_KEY = "GENRES_KEY";
     private String mGenres;
     private RecyclerView mRecyclerViewSongByGenre;
     private GenreContract.Presenter mPresenter;
     private GenreAdapter mGenreAdapter;
+    private List<Song> mSongs;
 
     public static GenreFragment newInstance(String genre) {
         GenreFragment fragment = new GenreFragment();
@@ -37,7 +41,7 @@ public class GenreFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+        @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_genre, container, false);
         mGenres = getArguments().getString(GENRES_KEY);
         initView(view);
@@ -56,7 +60,7 @@ public class GenreFragment extends Fragment
     private void initData() {
         SongRemoteDataSource remoteDataSource = SongRemoteDataSource.getInstance();
         SongLocalDataSource localDataSource =
-                SongLocalDataSource.getInstance(getActivity().getApplicationContext());
+            SongLocalDataSource.getInstance(getActivity().getApplicationContext());
         SongRepository repository = SongRepository.getInstance(localDataSource, remoteDataSource);
         mPresenter = new GenrePresenter(repository);
         mPresenter.setView(this);
@@ -66,6 +70,7 @@ public class GenreFragment extends Fragment
     @Override
     public void onGetAllSongSuccess(List<Song> songs) {
         if (songs != null) {
+            mSongs = songs;
             mGenreAdapter.updateData(songs);
         }
     }
@@ -77,6 +82,8 @@ public class GenreFragment extends Fragment
 
     @Override
     public void onItemClickListener(Song item) {
-        Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        startActivity(PlaySongActivity.getIntent(getContext(), (Song) item));
+        Intent intent = SongService.getServiceIntent(getContext(), mSongs, mSongs.indexOf(item));
+        getActivity().startService(intent);
     }
 }
