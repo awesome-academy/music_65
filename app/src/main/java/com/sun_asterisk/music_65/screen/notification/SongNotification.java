@@ -5,10 +5,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.sun_asterisk.music_65.R;
+import com.sun_asterisk.music_65.data.model.Song;
 import com.sun_asterisk.music_65.screen.main.MainActivity;
 import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.CommonUtils;
@@ -83,5 +91,21 @@ public class SongNotification {
         } else {
             mAction.icon = R.drawable.ic_play;
         }
+    }
+
+    public void updateNotificationSong(final Song song) {
+        Glide.with(mContext)
+            .asBitmap()
+            .load(CommonUtils.setSize(song.getArtworkUrl(), CommonUtils.T500))
+            .apply(new RequestOptions().error(R.drawable.play_local))
+            .into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource,
+                    @Nullable Transition<? super Bitmap> transition) {
+                    mBuilder.setLargeIcon(resource);
+                }
+            });
+        mBuilder.setContentTitle(song.getTitle());
+        mBuilder.setContentText(song.getUser().getUsername());
     }
 }

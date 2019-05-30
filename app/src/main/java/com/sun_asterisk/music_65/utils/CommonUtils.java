@@ -9,7 +9,7 @@ public class CommonUtils {
 
     //fix size imageview
     public static String setSize(String url, String type) {
-        return url.replace(LARGE, type);
+        return url != null ? url.replace(LARGE, type) : null;
     }
 
     public interface Genres {
