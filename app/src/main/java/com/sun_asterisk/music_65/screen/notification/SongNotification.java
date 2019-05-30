@@ -76,4 +76,12 @@ public class SongNotification {
         Intent intent = new Intent(mContext, MainActivity.class);
         return PendingIntent.getActivity(mContext, 0, intent, 0);
     }
+
+    public void updatePlayPauseNotification(boolean isPlaying) {
+        if (isPlaying) {
+            mAction.icon = R.drawable.ic_pause;
+        } else {
+            mAction.icon = R.drawable.ic_play;
+        }
+    }
 }

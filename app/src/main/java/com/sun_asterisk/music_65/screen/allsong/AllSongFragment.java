@@ -1,5 +1,6 @@
 package com.sun_asterisk.music_65.screen.allsong;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,13 +21,14 @@ import com.sun_asterisk.music_65.data.source.remote.SongRemoteDataSource;
 import com.sun_asterisk.music_65.screen.allsong.adapter.AllSongAdapter;
 import com.sun_asterisk.music_65.screen.allsong.adapter.BannerPagerAdapter;
 import com.sun_asterisk.music_65.screen.playsong.PlaySongActivity;
+import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.CommonUtils;
 import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
 import java.util.List;
 
 public class AllSongFragment extends Fragment
-        implements ALLSongContract.View, SwipeRefreshLayout.OnRefreshListener,
-        OnItemRecyclerViewClickListener<Song> {
+    implements ALLSongContract.View, SwipeRefreshLayout.OnRefreshListener,
+    OnItemRecyclerViewClickListener<Song> {
     private ViewPager mViewPagerBanner;
     private TabLayout mTabLayoutIndicator;
     private SwipeRefreshLayout mSwipeRefreshLayoutHome;
@@ -39,7 +41,7 @@ public class AllSongFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+        @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_song, container, false);
         initView(view);
         initData();
@@ -76,7 +78,9 @@ public class AllSongFragment extends Fragment
 
     @Override
     public void onItemClickListener(Song item) {
-        startActivity(PlaySongActivity.getIntent(getContext(), item));
+        startActivity(PlaySongActivity.getIntent(getContext(), (Song) item));
+        Intent intent = SongService.getServiceIntent(getContext(), mSongs, mSongs.indexOf(item));
+        getActivity().startService(intent);
     }
 
     private void initView(View view) {
