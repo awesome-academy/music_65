@@ -10,14 +10,15 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import com.sun_asterisk.music_65.R;
 import com.sun_asterisk.music_65.screen.main.MainActivity;
+import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.CommonUtils;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
 public class SongNotification {
-    public NotificationCompat.Builder mBuilder;
     public static final String NOTIFICATION_CHANNEL = "sun_music";
     public static final int NOTIFICATION_INT_ID = 100;
+    private NotificationCompat.Builder mBuilder;
     private Context mContext;
     private NotificationCompat.Action mAction;
     private NotificationManager mNotificationManager;
@@ -66,7 +67,7 @@ public class SongNotification {
     }
 
     private PendingIntent pendingIntentAction(String action) {
-        Intent intent = new Intent(mContext, MainActivity.class);
+        Intent intent = new Intent(mContext, SongService.class);
         intent.setAction(action);
         return PendingIntent.getService(mContext, 0, intent, 0);
     }
