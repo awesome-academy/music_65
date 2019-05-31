@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import com.sun_asterisk.music_65.data.model.Song;
 import com.sun_asterisk.music_65.screen.notification.SongNotification;
 import com.sun_asterisk.music_65.utils.CommonUtils;
-import com.sun_asterisk.music_65.utils.Constant;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +80,7 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        mSongNotification.updatePlayPauseNotification(true);
         startForeground(SongNotification.NOTIFICATION_INT_ID,
             mSongNotification.getBuilder().build());
     }
@@ -100,6 +100,7 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
         } catch (IOException e) {
             e.printStackTrace();
         }
+        mSongNotification.updateNotificationSong(song);
     }
 
     public void pauseSong() {
