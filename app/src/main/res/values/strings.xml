@@ -21,4 +21,6 @@
     <string name="pause">Pause</string>
     <string name="next">next</string>
     <string name="titlePlaylist">Playlist</string>
+    <string name="dimension_ratio_1_1">1:1</string>
+    <string name="default_duration">00:00</string>
 </resources>

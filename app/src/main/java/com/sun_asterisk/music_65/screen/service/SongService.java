@@ -16,7 +16,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongService extends Service implements MediaPlayer.OnPreparedListener {
+public class SongService extends Service
+    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     private SongBinder mSongBinder;
     private SongNotification mSongNotification;
     private final static String EXTRA_SONGS_LIST = "EXTRA_SONGS_LIST";
@@ -26,6 +27,7 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
     private List<Song> mSongs;
     private int mPosition;
     private MediaPlayer mMediaPlayer;
+    private ServiceContract.OnMediaPlayChange mOnMediaPlayChange;
 
     public static Intent getServiceIntent(Context context, List<Song> songs, int position) {
         Intent intent = new Intent(context, SongService.class);
@@ -33,6 +35,10 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
             (ArrayList<? extends Parcelable>) songs);
         intent.putExtra(EXTRA_SONG_POSITION, position);
         return intent;
+    }
+
+    public void setOnMediaChangeListener(ServiceContract.OnMediaPlayChange onMediaPlayChange) {
+        mOnMediaPlayChange = onMediaPlayChange;
     }
 
     @Override
@@ -60,9 +66,15 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
                         pauseSong();
                         break;
                     case CommonUtils.Action.ACTION_NEXT:
+                        if (mOnMediaPlayChange != null) {
+                            mOnMediaPlayChange.onMediaStateChange(false);
+                        }
                         nextSong();
                         break;
                     case CommonUtils.Action.ACTION_PREVIOUS:
+                        if (mOnMediaPlayChange != null) {
+                            mOnMediaPlayChange.onMediaStateChange(false);
+                        }
                         prevSong();
                         break;
                 }
@@ -80,9 +92,19 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        if (mOnMediaPlayChange != null) {
+            mOnMediaPlayChange.onMediaStateChange(true);
+        }
         mSongNotification.updatePlayPauseNotification(true);
         startForeground(SongNotification.NOTIFICATION_INT_ID,
             mSongNotification.getBuilder().build());
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        if (mOnMediaPlayChange != null) {
+            mOnMediaPlayChange.onMediaStateChange(false);
+        }
     }
 
     public void playSong() {
@@ -106,8 +128,14 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
     public void pauseSong() {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
+            if (mOnMediaPlayChange != null) {
+                mOnMediaPlayChange.onMediaStateChange(false);
+            }
         } else {
             mMediaPlayer.start();
+            if (mOnMediaPlayChange != null) {
+                mOnMediaPlayChange.onMediaStateChange(true);
+            }
         }
         mSongNotification.updatePlayPauseNotification(mMediaPlayer.isPlaying());
         startForeground(SongNotification.NOTIFICATION_INT_ID,
@@ -128,6 +156,10 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
             mPosition = mSongs.size() - POSITION_VALUE_ONE;
         }
         playSong();
+    }
+
+    public boolean isPlaying() {
+        return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
     public class SongBinder extends Binder {
