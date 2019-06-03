@@ -19,6 +19,7 @@ import com.sun_asterisk.music_65.data.source.SongRepository;
 import com.sun_asterisk.music_65.data.source.local.SongLocalDataSource;
 import com.sun_asterisk.music_65.data.source.remote.SongRemoteDataSource;
 import com.sun_asterisk.music_65.screen.library.adapter.LibraryAdapter;
+import com.sun_asterisk.music_65.screen.playsong.PlaySongActivity;
 import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
 import java.util.List;
@@ -56,6 +57,7 @@ public class LibraryFragment extends Fragment
 
     @Override
     public void onItemClickListener(Song item) {
+        startActivity(PlaySongActivity.getIntent(getContext(), (Song) item));
         Intent intent = SongService.getServiceIntent(getContext(), mSongs, mSongs.indexOf(item));
         getActivity().startService(intent);
     }

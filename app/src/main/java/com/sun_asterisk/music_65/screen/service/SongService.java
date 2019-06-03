@@ -175,6 +175,10 @@ public class SongService extends Service
         }
     }
 
+    public Song getCurrentSong(){
+        return mSongs.get(mPosition);
+    }
+
     public boolean isPlaying() {
         return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
