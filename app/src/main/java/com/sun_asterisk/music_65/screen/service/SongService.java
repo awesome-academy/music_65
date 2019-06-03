@@ -122,6 +122,9 @@ public class SongService extends Service
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (mOnMediaPlayChange != null) {
+            mOnMediaPlayChange.onSongChange(song);
+        }
         mSongNotification.updateNotificationSong(song);
     }
 
@@ -156,6 +159,20 @@ public class SongService extends Service
             mPosition = mSongs.size() - POSITION_VALUE_ONE;
         }
         playSong();
+    }
+
+    public int getCurrentDuration() {
+        return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : DEFAULT_POSITION;
+    }
+
+    public int getDuration() {
+        return Integer.valueOf(mSongs.get(mPosition).getDuration());
+    }
+
+    public void seekTo(int duration) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.seekTo(duration);
+        }
     }
 
     public boolean isPlaying() {
