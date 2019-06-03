@@ -12,14 +12,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sun_asterisk.music_65.R;
 import com.sun_asterisk.music_65.data.model.Song;
 import com.sun_asterisk.music_65.screen.service.ServiceContract;
 import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.CommonUtils;
+import java.util.Objects;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
@@ -34,6 +39,7 @@ public class ControlSongFragment extends Fragment
     private SongService mSongService;
     private boolean mIsBound;
     private Handler mHandler;
+    private Animation mAnimationImagePlay;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -42,6 +48,7 @@ public class ControlSongFragment extends Fragment
             mSongService.setOnMediaChangeListener(ControlSongFragment.this);
             onMediaStateChange(mSongService.isPlaying());
             updateSeekBar();
+            updateUI(mSongService.getCurrentSong());
             mIsBound = true;
         }
 
@@ -79,6 +86,7 @@ public class ControlSongFragment extends Fragment
     public void onDestroy() {
         super.onDestroy();
         if (mIsBound) {
+            mSongService.setOnMediaChangeListener(null);
             getActivity().unbindService(mServiceConnection);
             mIsBound = false;
         }
@@ -103,15 +111,19 @@ public class ControlSongFragment extends Fragment
 
     @Override
     public void onSongChange(Song song) {
-
+        if (song != null) {
+            updateUI(song);
+        }
     }
 
     @Override
     public void onMediaStateChange(boolean isPlaying) {
         if (isPlaying) {
             mImagePlay.setImageResource(R.drawable.ic_pause);
+            mImageArtwork.startAnimation(mAnimationImagePlay);
         } else {
             mImagePlay.setImageResource(R.drawable.ic_play);
+            mImageArtwork.clearAnimation();
         }
     }
 
@@ -145,6 +157,7 @@ public class ControlSongFragment extends Fragment
         mImageNext.setOnClickListener(this);
         mImagePrevious.setOnClickListener(this);
         mSeekBar.setOnSeekBarChangeListener(this);
+        mAnimationImagePlay = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_image_song);
     }
 
     private void initData() {
@@ -162,5 +175,15 @@ public class ControlSongFragment extends Fragment
                 mHandler.postDelayed(this, TIME_UPDATE_SONG);
             }
         }, TIME_UPDATE_SONG);
+    }
+
+    private void updateUI(Song song) {
+        mTextNameSong.setText(song.getTitle());
+        mTextNameAuthor.setText(song.getUser().getUsername());
+        Glide.with(getContext())
+            .load(CommonUtils.setSize(song.getArtworkUrl(), CommonUtils.T500))
+            .apply(new RequestOptions().error(R.drawable.music))
+            .apply(RequestOptions.circleCropTransform())
+            .into(mImageArtwork);
     }
 }

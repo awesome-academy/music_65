@@ -53,8 +53,8 @@ public class PlaySongActivity extends AppCompatActivity {
     private void initView() {
         mViewPager = findViewById(R.id.viewPagerPlaySong);
         PlaySongPagerAdapter pagerAdapter = new PlaySongPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new PlayListFragment());
         pagerAdapter.addFragment(new ControlSongFragment());
+        pagerAdapter.addFragment(new PlayListFragment());
         mViewPager.setAdapter(pagerAdapter);
         mToolbarPlaySong = findViewById(R.id.toolbarPlaySong);
         setSupportActionBar(mToolbarPlaySong);
