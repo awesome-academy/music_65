@@ -14,6 +14,7 @@ import com.sun_asterisk.music_65.screen.notification.SongNotification;
 import com.sun_asterisk.music_65.utils.CommonUtils;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SongService extends Service
@@ -25,7 +26,11 @@ public class SongService extends Service
     private final static int DEFAULT_POSITION = 0;
     private final static int POSITION_VALUE_ONE = 1;
     private List<Song> mSongs;
+    private List<Song> mShuffleSongs;
+    private List<Song> mTemporarySongs;
     private int mPosition;
+    private int mLoop;
+    private boolean mShuffle;
     private MediaPlayer mMediaPlayer;
     private ServiceContract.OnMediaPlayChange mOnMediaPlayChange;
 
@@ -55,6 +60,11 @@ public class SongService extends Service
             if (songs != null) {
                 mSongs = songs;
                 mPosition = intent.getIntExtra(EXTRA_SONG_POSITION, DEFAULT_POSITION);
+                mLoop = CommonUtils.LoopType.LOOP_ALL;
+                mShuffle = false;
+                mShuffleSongs = new ArrayList<>(mSongs);
+                mTemporarySongs = new ArrayList<>(mSongs);
+                Collections.shuffle(mShuffleSongs);
                 if (mSongNotification != null) {
                     mSongNotification.initNotification();
                 }
@@ -92,6 +102,7 @@ public class SongService extends Service
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        mp.setOnCompletionListener(this);
         if (mOnMediaPlayChange != null) {
             mOnMediaPlayChange.onMediaStateChange(true);
         }
@@ -104,6 +115,19 @@ public class SongService extends Service
     public void onCompletion(MediaPlayer mp) {
         if (mOnMediaPlayChange != null) {
             mOnMediaPlayChange.onMediaStateChange(false);
+        }
+        switch (mLoop) {
+            case CommonUtils.LoopType.LOOP_ALL:
+                nextSong();
+                break;
+            case CommonUtils.LoopType.LOOP_ONE:
+                playSong();
+                break;
+            case CommonUtils.LoopType.NO_LOOP:
+                if (mPosition != mSongs.size() - POSITION_VALUE_ONE) {
+                    nextSong();
+                }
+                break;
         }
     }
 
@@ -166,7 +190,7 @@ public class SongService extends Service
     }
 
     public int getDuration() {
-        return Integer.valueOf(mSongs.get(mPosition).getDuration());
+        return mMediaPlayer != null ? mMediaPlayer.getDuration() : DEFAULT_POSITION;
     }
 
     public void seekTo(int duration) {
@@ -175,7 +199,43 @@ public class SongService extends Service
         }
     }
 
-    public Song getCurrentSong(){
+    public void changeLoop() {
+        switch (mLoop) {
+            case CommonUtils.LoopType.LOOP_ALL:
+                mLoop = CommonUtils.LoopType.LOOP_ONE;
+                break;
+            case CommonUtils.LoopType.LOOP_ONE:
+                mLoop = CommonUtils.LoopType.NO_LOOP;
+                break;
+            case CommonUtils.LoopType.NO_LOOP:
+                mLoop = CommonUtils.LoopType.LOOP_ALL;
+                break;
+        }
+        if (mOnMediaPlayChange != null) {
+            mOnMediaPlayChange.onLoop(mLoop);
+        }
+    }
+
+    public void changeShuffle() {
+        mShuffle = !mShuffle;
+        int newPosition;
+        if (mShuffle) {
+            newPosition = mShuffleSongs.indexOf(mSongs.get(mPosition));
+            mSongs.clear();
+            mSongs.addAll(mShuffleSongs);
+            mPosition = newPosition;
+        } else {
+            newPosition = mTemporarySongs.indexOf(mShuffleSongs.get(mPosition));
+            mSongs.clear();
+            mSongs.addAll(mTemporarySongs);
+            mPosition = newPosition;
+        }
+        if (mOnMediaPlayChange != null) {
+            mOnMediaPlayChange.onShuffle(mShuffle);
+        }
+    }
+
+    public Song getCurrentSong() {
         return mSongs.get(mPosition);
     }
 

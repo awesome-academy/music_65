@@ -7,5 +7,9 @@ public interface ServiceContract {
         void onSongChange(Song song);
 
         void onMediaStateChange(boolean isPlaying);
+
+        void onLoop(int loopType);
+
+        void onShuffle(boolean isShuffle);
     }
 }
