@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,21 +13,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import com.sun_asterisk.music_65.R;
 import com.sun_asterisk.music_65.data.model.Song;
 import com.sun_asterisk.music_65.screen.service.ServiceContract;
 import com.sun_asterisk.music_65.screen.service.SongService;
+import com.sun_asterisk.music_65.utils.CommonUtils;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
 public class ControlSongFragment extends Fragment
-    implements View.OnClickListener, ServiceContract.OnMediaPlayChange {
+    implements View.OnClickListener, ServiceContract.OnMediaPlayChange,
+    SeekBar.OnSeekBarChangeListener {
+    private static final int TIME_UPDATE_SONG = 100;
     private ImageView mImagePrevious, mImagePlay, mImageNext, mImageShuffle, mImageDownload,
         mImageLoop, mImageArtwork;
     private TextView mTextNameSong, mTextNameAuthor, mTextTimeTotal, mTextTimeOver;
+    private SeekBar mSeekBar;
     private SongService mSongService;
     private boolean mIsBound;
+    private Handler mHandler;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -34,6 +41,7 @@ public class ControlSongFragment extends Fragment
             mSongService = songBinder.getService();
             mSongService.setOnMediaChangeListener(ControlSongFragment.this);
             onMediaStateChange(mSongService.isPlaying());
+            updateSeekBar();
             mIsBound = true;
         }
 
@@ -49,6 +57,7 @@ public class ControlSongFragment extends Fragment
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_control_song, container, false);
         initView(view);
+        initData();
         return view;
     }
 
@@ -106,6 +115,19 @@ public class ControlSongFragment extends Fragment
         }
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        mSongService.seekTo(seekBar.getProgress());
+    }
+
     private void initView(View view) {
         mImageArtwork = view.findViewById(R.id.imageView);
         mImagePrevious = view.findViewById(R.id.imageViewPrevious);
@@ -118,8 +140,27 @@ public class ControlSongFragment extends Fragment
         mTextNameAuthor = view.findViewById(R.id.textNameAuthor);
         mTextTimeTotal = view.findViewById(R.id.textTimeTotal);
         mTextTimeOver = view.findViewById(R.id.textTimeOver);
+        mSeekBar = view.findViewById(R.id.seekBarPlayMusic);
         mImagePlay.setOnClickListener(this);
         mImageNext.setOnClickListener(this);
         mImagePrevious.setOnClickListener(this);
+        mSeekBar.setOnSeekBarChangeListener(this);
+    }
+
+    private void initData() {
+        mHandler = new Handler();
+    }
+
+    private void updateSeekBar() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSeekBar.setMax(mSongService.getDuration());
+                mTextTimeTotal.setText(CommonUtils.convertTime(mSongService.getDuration()));
+                mTextTimeOver.setText(CommonUtils.convertTime(mSongService.getCurrentDuration()));
+                mSeekBar.setProgress(mSongService.getCurrentDuration());
+                mHandler.postDelayed(this, TIME_UPDATE_SONG);
+            }
+        }, TIME_UPDATE_SONG);
     }
 }
