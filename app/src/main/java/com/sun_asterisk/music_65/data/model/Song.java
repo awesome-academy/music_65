@@ -13,6 +13,7 @@ public class Song implements Parcelable {
     private String mArtworkUrl;
     private String mStreamUrl;
     private User mUser;
+    private boolean mIsDownload;
 
     public Song(SongBuilder songBuilder) {
         mId = songBuilder.mId;
@@ -22,6 +23,7 @@ public class Song implements Parcelable {
         mArtworkUrl = songBuilder.mArtworkUrl;
         mUser = songBuilder.mUser;
         mStreamUrl = songBuilder.mStreamUrl;
+        mIsDownload = songBuilder.mIsDownload;
     }
 
     public Song() {
@@ -35,6 +37,12 @@ public class Song implements Parcelable {
         mArtworkUrl = in.readString();
         mStreamUrl = in.readString();
         mUser = in.readParcelable(User.class.getClassLoader());
+        mIsDownload = in.readByte() != 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
@@ -46,11 +54,7 @@ public class Song implements Parcelable {
         dest.writeString(mArtworkUrl);
         dest.writeString(mStreamUrl);
         dest.writeParcelable(mUser, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        dest.writeByte((byte) (mIsDownload ? 1 : 0));
     }
 
     public static final Creator<Song> CREATOR = new Creator<Song>() {
@@ -93,6 +97,10 @@ public class Song implements Parcelable {
         return mStreamUrl;
     }
 
+    public boolean getIsDownload() {
+        return mIsDownload;
+    }
+
     public static class SongBuilder {
         private String mId;
         private String mTitle;
@@ -101,9 +109,10 @@ public class Song implements Parcelable {
         private String mArtworkUrl;
         private String mStreamUrl;
         private User mUser;
+        private boolean mIsDownload;
 
         public SongBuilder(String id, String title, String duration, String genre,
-                String artworkUrl, String streamUrl, User user) {
+            String artworkUrl, String streamUrl, User user, boolean isDownload) {
             mId = id;
             mTitle = title;
             mDuration = duration;
@@ -111,6 +120,7 @@ public class Song implements Parcelable {
             mArtworkUrl = artworkUrl;
             mStreamUrl = streamUrl;
             mUser = user;
+            mIsDownload = isDownload;
         }
 
         public SongBuilder() {
@@ -148,13 +158,18 @@ public class Song implements Parcelable {
 
         public SongBuilder user(JSONObject json) throws JSONException {
             mUser = new User.UserBuilder().id(json.getString(User.UserEntry.ID))
-                    .username(json.getString(User.UserEntry.USERNAME))
-                    .build();
+                .username(json.getString(User.UserEntry.USERNAME))
+                .build();
             return this;
         }
 
         public SongBuilder user(User user) {
             mUser = user;
+            return this;
+        }
+
+        public SongBuilder download(boolean isDownload) {
+            mIsDownload = isDownload;
             return this;
         }
 

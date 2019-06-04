@@ -21,7 +21,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+        @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
         return view;
@@ -33,15 +33,15 @@ public class HomeFragment extends Fragment {
         PagerAdapter pagerAdapter = new PagerAdapter(getFragmentManager());
         pagerAdapter.addFragment(new AllSongFragment(), getString(R.string.titleAllSongs));
         pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.AUDIO),
-                getString(R.string.titleAudio));
+            getString(R.string.titleAudio));
         pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.AMBIENT),
-                getString(R.string.titleAmbient));
+            getString(R.string.titleAmbient));
         pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.ALTERNATIVE_ROCK),
-                getString(R.string.titleRock));
+            getString(R.string.titleRock));
         pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.CLASSICAL),
-                getString(R.string.titleClassical));
+            getString(R.string.titleClassical));
         pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.COUNTRY),
-                getString(R.string.titleCountry));
+            getString(R.string.titleCountry));
         mViewPager.setAdapter(pagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
