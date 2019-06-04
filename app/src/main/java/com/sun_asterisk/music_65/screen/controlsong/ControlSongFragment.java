@@ -1,9 +1,16 @@
 package com.sun_asterisk.music_65.screen.controlsong;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -31,6 +38,8 @@ public class ControlSongFragment extends Fragment
     implements View.OnClickListener, ServiceContract.OnMediaPlayChange,
     SeekBar.OnSeekBarChangeListener {
     private static final int TIME_UPDATE_SONG = 100;
+    private final int DOWNLOAD_REQUEST_CODE = 6969;
+    private final static String MP3_EXTENSION = ".mp3";
     private ImageView mImagePrevious, mImagePlay, mImageNext, mImageShuffle, mImageDownload,
         mImageLoop, mImageArtwork;
     private TextView mTextNameSong, mTextNameAuthor, mTextTimeTotal, mTextTimeOver;
@@ -92,6 +101,16 @@ public class ControlSongFragment extends Fragment
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == DOWNLOAD_REQUEST_CODE
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            downloadSong();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageViewPlay:
@@ -110,6 +129,21 @@ public class ControlSongFragment extends Fragment
                 break;
             case R.id.imageViewShuffle:
                 mSongService.changeShuffle();
+                break;
+            case R.id.imageViewDownload:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (getActivity().checkCallingOrSelfPermission(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(
+                            new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                            DOWNLOAD_REQUEST_CODE);
+                    } else {
+                        downloadSong();
+                    }
+                } else {
+                    downloadSong();
+                }
                 break;
         }
     }
@@ -188,6 +222,7 @@ public class ControlSongFragment extends Fragment
         mSeekBar.setOnSeekBarChangeListener(this);
         mImageLoop.setOnClickListener(this);
         mImageShuffle.setOnClickListener(this);
+        mImageDownload.setOnClickListener(this);
         mAnimationImagePlay = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_image_song);
     }
 
@@ -216,5 +251,27 @@ public class ControlSongFragment extends Fragment
             .apply(new RequestOptions().error(R.drawable.music))
             .apply(RequestOptions.circleCropTransform())
             .into(mImageArtwork);
+        if (mSongService.isDownload()) {
+            mImageDownload.setVisibility(View.VISIBLE);
+        } else {
+            mImageDownload.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void downloadSong() {
+        Song song = mSongService.getCurrentSong();
+        if (song == null) {
+            return;
+        }
+        Uri uri = Uri.parse(song.getStreamUrl());
+        DownloadManager manager =
+            (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.enqueue(new DownloadManager.Request(uri).setNotificationVisibility(
+            DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_MUSIC,
+                song.getTitle() + MP3_EXTENSION)
+            .setDescription(song.getTitle()));
     }
 }

@@ -243,6 +243,10 @@ public class SongService extends Service
         return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
+    public boolean isDownload() {
+        return mSongs.get(mPosition).getIsDownload();
+    }
+
     public class SongBinder extends Binder {
         public SongService getService() {
             return SongService.this;

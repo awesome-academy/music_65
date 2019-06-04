@@ -43,6 +43,7 @@ public class SongLocalDataSource implements SongDataSource.LocalDataSource {
                         .streamUrl(cursor.getString(
                                 cursor.getColumnIndex(MediaStore.Audio.Media.DATA)))
                         .user(user)
+                        .download(false)
                         .build();
                 songs.add(song);
             }
