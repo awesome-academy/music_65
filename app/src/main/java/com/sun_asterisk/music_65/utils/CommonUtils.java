@@ -42,4 +42,11 @@ public class CommonUtils {
         int ACTION_PREVIOUS_INT = 0;
         int ACTION_PLAY_AND_PAUSE = 1;
     }
+
+    @IntDef({ LoopType.LOOP_ALL, LoopType.LOOP_ONE, LoopType.NO_LOOP })
+    public @interface LoopType {
+        int LOOP_ALL = 0;
+        int LOOP_ONE = 1;
+        int NO_LOOP = 2;
+    }
 }

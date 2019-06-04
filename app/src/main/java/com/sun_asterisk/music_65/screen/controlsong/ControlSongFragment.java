@@ -24,7 +24,6 @@ import com.sun_asterisk.music_65.data.model.Song;
 import com.sun_asterisk.music_65.screen.service.ServiceContract;
 import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.CommonUtils;
-import java.util.Objects;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
@@ -106,6 +105,12 @@ public class ControlSongFragment extends Fragment
                 onMediaStateChange(false);
                 mSongService.nextSong();
                 break;
+            case R.id.imageViewLoop:
+                mSongService.changeLoop();
+                break;
+            case R.id.imageViewShuffle:
+                mSongService.changeShuffle();
+                break;
         }
     }
 
@@ -124,6 +129,30 @@ public class ControlSongFragment extends Fragment
         } else {
             mImagePlay.setImageResource(R.drawable.ic_play);
             mImageArtwork.clearAnimation();
+        }
+    }
+
+    @Override
+    public void onLoop(int loopType) {
+        switch (loopType) {
+            case CommonUtils.LoopType.LOOP_ALL:
+                mImageLoop.setImageResource(R.drawable.ic_loop);
+                break;
+            case CommonUtils.LoopType.LOOP_ONE:
+                mImageLoop.setImageResource(R.drawable.ic_loop_one);
+                break;
+            case CommonUtils.LoopType.NO_LOOP:
+                mImageLoop.setImageResource(R.drawable.ic_unloop);
+                break;
+        }
+    }
+
+    @Override
+    public void onShuffle(boolean isShuffle) {
+        if (isShuffle) {
+            mImageShuffle.setImageResource(R.drawable.ic_shuffle);
+        } else {
+            mImageShuffle.setImageResource(R.drawable.ic_unshuffle);
         }
     }
 
@@ -157,6 +186,8 @@ public class ControlSongFragment extends Fragment
         mImageNext.setOnClickListener(this);
         mImagePrevious.setOnClickListener(this);
         mSeekBar.setOnSeekBarChangeListener(this);
+        mImageLoop.setOnClickListener(this);
+        mImageShuffle.setOnClickListener(this);
         mAnimationImagePlay = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_image_song);
     }
 

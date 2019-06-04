@@ -10,7 +10,7 @@
         android:id="@+id/textNameSong"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_80"
+        android:layout_marginTop="@dimen/dp_18"
         android:gravity="center"
         android:singleLine="true"
         android:textSize="@dimen/sp_18"
@@ -39,8 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dp_24"
         android:text="@string/default_duration"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarPlayMusic"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarPlayMusic"
         app:layout_constraintTop_toTopOf="@+id/textTimeOver"
         />
 
@@ -48,10 +48,10 @@
         android:id="@+id/textTimeOver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/default_duration"
         android:layout_marginStart="@dimen/dp_24"
-        app:layout_constraintTop_toBottomOf="@id/seekBarPlayMusic"
+        android:text="@string/default_duration"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seekBarPlayMusic"
         />
 
     <ImageView
@@ -134,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_16"
-        android:src="@drawable/ic_unloop"
+        android:src="@drawable/ic_loop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageViewDownload"
@@ -154,10 +154,10 @@
         android:id="@+id/seekBarPlayMusic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_24"
         android:layout_marginBottom="@dimen/dp_8"
         android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_24"
         app:layout_constraintBottom_toTopOf="@+id/imageViewPlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
