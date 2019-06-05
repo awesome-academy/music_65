@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/dp_80">
+    >
 
     <TextView
         android:id="@+id/textTitlePlaylist"
@@ -13,17 +13,21 @@
         android:layout_marginBottom="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_16"
         android:text="@string/titlePlaylist"
-        android:textSize="@dimen/sp_30"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerviewPlaylist"
+        android:textSize="@dimen/sp_20"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlaylist"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerviewPlaylist"
+        android:id="@+id/recyclerViewPlaylist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingLeft="@dimen/dp_16"
+        android:orientation="vertical"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textTitlePlaylist"
-        app:layout_constraintTop_toBottomOf="@+id/textTitlePlaylist"/>
+        app:layout_constraintTop_toBottomOf="@+id/textTitlePlaylist"
+        />
 </android.support.constraint.ConstraintLayout>

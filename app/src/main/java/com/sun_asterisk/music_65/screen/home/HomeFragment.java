@@ -15,8 +15,6 @@ import com.sun_asterisk.music_65.screen.home.adapter.PagerAdapter;
 import com.sun_asterisk.music_65.utils.CommonUtils;
 
 public class HomeFragment extends Fragment {
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
 
     @Nullable
     @Override
@@ -28,8 +26,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View view) {
-        mTabLayout = view.findViewById(R.id.tabLayoutHome);
-        mViewPager = view.findViewById(R.id.viewPagerHome);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayoutHome);
+        ViewPager viewPager = view.findViewById(R.id.viewPagerHome);
         PagerAdapter pagerAdapter = new PagerAdapter(getFragmentManager());
         pagerAdapter.addFragment(new AllSongFragment(), getString(R.string.titleAllSongs));
         pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.AUDIO),
@@ -42,7 +40,7 @@ public class HomeFragment extends Fragment {
             getString(R.string.titleClassical));
         pagerAdapter.addFragment(GenreFragment.newInstance(CommonUtils.Genres.COUNTRY),
             getString(R.string.titleCountry));
-        mViewPager.setAdapter(pagerAdapter);
-        mTabLayout.setupWithViewPager(mViewPager);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }

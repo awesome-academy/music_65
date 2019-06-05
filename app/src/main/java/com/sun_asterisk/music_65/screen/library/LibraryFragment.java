@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +26,14 @@ import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
 import java.util.List;
 
 public class LibraryFragment extends Fragment
-    implements LibraryContract.View, OnItemRecyclerViewClickListener<Song> {
+    implements LibraryContract.View, OnItemRecyclerViewClickListener<Song>,
+    SwipeRefreshLayout.OnRefreshListener {
     private LibraryContract.Presenter mPresenter;
     private static final int PERMISSION_REQUEST_CODE = 1616;
     private LibraryAdapter mLibraryAdapter;
     private RecyclerView mRecyclerView;
     private List<Song> mSongs;
+    private SwipeRefreshLayout mSwipeRefreshLayoutLibrary;
 
     @Nullable
     @Override
@@ -39,6 +42,7 @@ public class LibraryFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
         initView(view);
         initData();
+        mSwipeRefreshLayoutLibrary.setOnRefreshListener(this);
         return view;
     }
 
@@ -47,6 +51,7 @@ public class LibraryFragment extends Fragment
         if (songs != null) {
             mSongs = songs;
             mLibraryAdapter.updateData(songs);
+            mSwipeRefreshLayoutLibrary.setRefreshing(false);
         }
     }
 
@@ -57,7 +62,7 @@ public class LibraryFragment extends Fragment
 
     @Override
     public void onItemClickListener(Song item) {
-        startActivity(PlaySongActivity.getIntent(getContext(), (Song) item));
+        startActivity(PlaySongActivity.getIntent(getContext(), mSongs, mSongs.indexOf(item)));
         Intent intent = SongService.getServiceIntent(getContext(), mSongs, mSongs.indexOf(item));
         getActivity().startService(intent);
     }
@@ -74,6 +79,7 @@ public class LibraryFragment extends Fragment
 
     public void initView(View view) {
         mRecyclerView = view.findViewById(R.id.recyclerViewLocalSongs);
+        mSwipeRefreshLayoutLibrary = view.findViewById(R.id.swipeRefreshLayoutLibrary);
         mRecyclerView.setHasFixedSize(true);
         mLibraryAdapter = new LibraryAdapter();
         mRecyclerView.setAdapter(mLibraryAdapter);
@@ -103,5 +109,12 @@ public class LibraryFragment extends Fragment
             return true;
         }
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        if (isCheckPermission()) {
+            mPresenter.getLocalSongs();
+        }
     }
 }
