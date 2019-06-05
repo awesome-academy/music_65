@@ -239,12 +239,8 @@ public class SongService extends Service
         return mSongs.get(mPosition);
     }
 
-    public boolean isPlaying() {
-        return mMediaPlayer != null && mMediaPlayer.isPlaying();
-    }
-
-    public boolean isDownload() {
-        return mSongs.get(mPosition).getIsDownload();
+    public List<Song> getSongs() {
+        return mSongs;
     }
 
     public class SongBinder extends Binder {

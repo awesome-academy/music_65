@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,15 @@ import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
 import java.util.List;
 
 public class GenreFragment extends Fragment
-    implements GenreContract.View, OnItemRecyclerViewClickListener<Song> {
+    implements GenreContract.View, OnItemRecyclerViewClickListener<Song>,
+    SwipeRefreshLayout.OnRefreshListener {
     private static final String GENRES_KEY = "GENRES_KEY";
     private String mGenres;
     private RecyclerView mRecyclerViewSongByGenre;
     private GenreContract.Presenter mPresenter;
     private GenreAdapter mGenreAdapter;
     private List<Song> mSongs;
+    private SwipeRefreshLayout mSwipeRefreshLayoutGenre;
 
     public static GenreFragment newInstance(String genre) {
         GenreFragment fragment = new GenreFragment();
@@ -46,11 +49,13 @@ public class GenreFragment extends Fragment
         mGenres = getArguments().getString(GENRES_KEY);
         initView(view);
         initData();
+        mSwipeRefreshLayoutGenre.setOnRefreshListener(this);
         return view;
     }
 
     private void initView(View view) {
         mRecyclerViewSongByGenre = view.findViewById(R.id.recyclerViewGenres);
+        mSwipeRefreshLayoutGenre = view.findViewById(R.id.swipeRefreshLayoutGenre);
         mRecyclerViewSongByGenre.setHasFixedSize(true);
         mGenreAdapter = new GenreAdapter();
         mRecyclerViewSongByGenre.setAdapter(mGenreAdapter);
@@ -72,6 +77,7 @@ public class GenreFragment extends Fragment
         if (songs != null) {
             mSongs = songs;
             mGenreAdapter.updateData(songs);
+            mSwipeRefreshLayoutGenre.setRefreshing(false);
         }
     }
 
@@ -82,8 +88,13 @@ public class GenreFragment extends Fragment
 
     @Override
     public void onItemClickListener(Song item) {
-        startActivity(PlaySongActivity.getIntent(getContext(), (Song) item));
+        startActivity(PlaySongActivity.getIntent(getContext(), mSongs, mSongs.indexOf(item)));
         Intent intent = SongService.getServiceIntent(getContext(), mSongs, mSongs.indexOf(item));
         getActivity().startService(intent);
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.getSongByGenre(mGenres);
     }
 }

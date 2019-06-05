@@ -78,7 +78,7 @@ public class AllSongFragment extends Fragment
 
     @Override
     public void onItemClickListener(Song item) {
-        startActivity(PlaySongActivity.getIntent(getContext(), (Song) item));
+        startActivity(PlaySongActivity.getIntent(getContext(), mSongs, mSongs.indexOf(item)));
         Intent intent = SongService.getServiceIntent(getContext(), mSongs, mSongs.indexOf(item));
         getActivity().startService(intent);
     }
