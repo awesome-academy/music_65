@@ -12,28 +12,37 @@ import com.bumptech.glide.Glide;
 import com.sun_asterisk.music_65.R;
 import com.sun_asterisk.music_65.data.model.Song;
 import com.sun_asterisk.music_65.utils.CommonUtils;
+import com.sun_asterisk.music_65.utils.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BannerPagerAdapter extends PagerAdapter {
+public class BannerPagerAdapter extends PagerAdapter implements View.OnClickListener {
     private Context mContext;
     private List<Song> mSongs;
     private ImageView mImageBanner;
     private TextView mTextViewBannerHome;
+    private OnItemClickListener mListener;
+    private int mPosition;
 
     public BannerPagerAdapter(Context context) {
         mContext = context;
         mSongs = new ArrayList<>();
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         LayoutInflater inflater =
-                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_banner_home, null);
         onBindView(view, position);
         container.addView(view);
+        mPosition = position - 1;
+        view.setOnClickListener(this);
         return view;
     }
 
@@ -62,8 +71,13 @@ public class BannerPagerAdapter extends PagerAdapter {
         mImageBanner = view.findViewById(R.id.imageBanner);
         mTextViewBannerHome = view.findViewById(R.id.textViewBannerHome);
         Glide.with(mContext)
-                .load(CommonUtils.setSize(mSongs.get(position).getArtworkUrl(), CommonUtils.T500))
-                .into(mImageBanner);
+            .load(CommonUtils.setSize(mSongs.get(position).getArtworkUrl(), CommonUtils.T500))
+            .into(mImageBanner);
         mTextViewBannerHome.setText(mSongs.get(position).getTitle());
+    }
+
+    @Override
+    public void onClick(View v) {
+        mListener.onItemRecyclerViewClick(mSongs, mPosition);
     }
 }

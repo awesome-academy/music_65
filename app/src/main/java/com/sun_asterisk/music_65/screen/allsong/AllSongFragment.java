@@ -24,11 +24,12 @@ import com.sun_asterisk.music_65.screen.playsong.PlaySongActivity;
 import com.sun_asterisk.music_65.screen.service.SongService;
 import com.sun_asterisk.music_65.utils.CommonUtils;
 import com.sun_asterisk.music_65.utils.OnItemRecyclerViewClickListener;
+import com.sun_asterisk.music_65.utils.OnItemClickListener;
 import java.util.List;
 
 public class AllSongFragment extends Fragment
     implements ALLSongContract.View, SwipeRefreshLayout.OnRefreshListener,
-    OnItemRecyclerViewClickListener<Song> {
+    OnItemRecyclerViewClickListener<Song>, OnItemClickListener {
     private ViewPager mViewPagerBanner;
     private TabLayout mTabLayoutIndicator;
     private SwipeRefreshLayout mSwipeRefreshLayoutHome;
@@ -95,6 +96,7 @@ public class AllSongFragment extends Fragment
         mAllSongAdapter = new AllSongAdapter();
         mRecyclerViewAllSong.setAdapter(mAllSongAdapter);
         mAllSongAdapter.setOnItemRecyclerViewClickListener(this);
+        mBannerPagerAdapter.setOnItemClickListener(this);
     }
 
     private void initData() {
@@ -105,5 +107,14 @@ public class AllSongFragment extends Fragment
         mPresenter.setView(this);
         mPresenter.getSongBanner();
         mPresenter.getSongByGenre(CommonUtils.Genres.MUSIC);
+    }
+
+    @Override
+    public void onItemRecyclerViewClick(List<Song> songs, int position) {
+        if (songs != null) {
+            startActivity(PlaySongActivity.getIntent(getContext(), songs, position));
+            Intent intent = SongService.getServiceIntent(getContext(), songs, position);
+            getActivity().startService(intent);
+        }
     }
 }
